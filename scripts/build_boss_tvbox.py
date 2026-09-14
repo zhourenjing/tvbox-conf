@@ -16,7 +16,7 @@ build_boss_tvbox.py — BOSS 自建 TVBox 聚合配置生成器（2026-09-14）
 - 相对路径（jar/api/ext）全部按各自源 base 改绝对 URL，保留 ;md5; 校验
 - 小雅 jar 去 md5（上游每天发版 jar 内容变、URL 不变，去 md5 才不会失效）
 - xiaoya 站点 key/name 原样；其余源 key 加 tag 前缀、name 加【源】前缀，杜绝 key 冲突
-- lives 只保留 iptv 容器（1905，2750 台）；parses 并集去重；rules 取小雅的
+- lives 双线路：内网 1905（默认）+ 公网 iptv.zrj-ai.icu 外线（302 跳上游直连不占云机带宽）；parses 并集去重；rules 取小雅的
 - storeHouse 存原始接口清单，App 内可一键切回任一原接口
 """
 import json, re, sys, os, urllib.parse
@@ -223,7 +223,9 @@ def main():
         "rules": rules_pick,
         "lives": [
             {"name": "🏠家庭直播", "type": 0,
-             "url": "http://192.168.100.150:1905/interface.m3u"}
+             "url": "http://192.168.100.150:1905/interface.m3u"},
+            {"name": "🏠家庭直播·外线", "type": 0,
+             "url": "https://iptv.zrj-ai.icu/interface.m3u"}
         ],
         "storeHouse": [
             {"sourceName": "小雅官方", "sourceUrl": "http://192.168.100.150:5678/tvbox/my_ext_jar.json"},
