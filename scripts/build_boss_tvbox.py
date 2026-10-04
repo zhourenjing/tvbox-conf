@@ -21,6 +21,15 @@ build_boss_tvbox.py — BOSS 自建 TVBox 聚合配置生成器（2026-09-14）
 """
 import json, re, sys, os, urllib.parse
 
+# IPTV 令牌（从 /root/.iptv-token-url 读取；该文件在仓库之外，令牌不会进配置仓库）
+IPTV_TOKEN = ""
+try:
+    _m = re.search(r'/u/([^/]+)/', open('/root/.iptv-token-url').read().strip())
+    IPTV_TOKEN = _m.group(1) if _m else ""
+except Exception:
+    IPTV_TOKEN = ""
+
+
 try:
     sys.stdout.reconfigure(encoding='utf-8')
 except Exception:
@@ -223,9 +232,9 @@ def main():
         "rules": rules_pick,
         "lives": [
             {"name": "🏠家庭直播", "type": 0,
-             "url": "http://192.168.100.150:1905/interface.m3u"},
+             "url": f"http://192.168.100.150:1905/u/{IPTV_TOKEN}/interface.m3u"},
             {"name": "🏠家庭直播·外线", "type": 0,
-             "url": "https://iptv.zrj-ai.icu/interface.m3u"}
+             "url": f"https://iptv.zrj-ai.icu/u/{IPTV_TOKEN}/interface.m3u"}
         ],
         "storeHouse": [
             {"sourceName": "小雅官方", "sourceUrl": "http://192.168.100.150:5678/tvbox/my_ext_jar.json"},
